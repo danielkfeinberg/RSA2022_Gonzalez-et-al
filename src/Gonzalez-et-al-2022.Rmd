@@ -8,11 +8,11 @@ output:
     highlight: pygments
     toc: yes
     toc_float: yes
-    code_folding: show
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 
 # Remove all environmental objects and start fresh
@@ -54,11 +54,12 @@ library(beepr)
 ```
 
 
-# 1. Importing and cleaning data for descriptives and ordinal regression
+## 1. Importing and cleaning data for descriptives and ordinal regression
 ```{r data_prep_descriptives_ordinalRegres}
 
 ## Reading in original .csv file
-pr_youth_substance_use <- read_csv(here("data", "ORIGINAL_PR data numeric.csv")) %>% 
+pr_youth_substance_use <- read_csv(here("data", 
+                                        "ORIGINAL_PR data numeric.csv")) %>% 
   clean_names()
 
 ## Creating cleaned subset for grades 7 and up (secondary only) and selecting 
@@ -117,7 +118,8 @@ ordinalRegres_substanceUse <- ordinalRegres_substanceUse %>%
 
 # labeling 'genero' variable
 ordinalRegres_substanceUse$genero <- factor(ordinalRegres_substanceUse$genero,
-                                      labels = c("Male", "Female"))
+                                      labels = c("Male", 
+                                                 "Female"))
 
 # All looks good, so I am removing 'femenino' and 'masculino' from the dataframe
 # and adding variables 'social_support_total' and 'ptsd_symptom_total'
@@ -125,7 +127,8 @@ ordinalRegres_substanceUse <- ordinalRegres_substanceUse %>%
   mutate(ptsd_symptom_total = 
            s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12) %>% 
   mutate(social_support_total = q20 + q21 + q22) %>% 
-  dplyr::select(-femenino, -masculino)
+  dplyr::select(-femenino,
+                -masculino)
 
 
 ## Recoding 's19' as three-tiered ordinal factor
@@ -140,19 +143,19 @@ ordinalRegres_substanceUse$s19 <- ordered(ordinalRegres_substanceUse$s19,
 ```
 
 
-## a) Below is a list of the variables that will be included in ordinal regression and some information about them:
+### a) Summaries for variables included in ordinal regression
 ```{r included_variables}
 summary(ordinalRegres_substanceUse)
 ```
 
 
-## b) Variable types
+### b) Variable types
 ```{r variable_types}
 str(ordinalRegres_substanceUse)
 ```
 
 
-## c) Verifying that dependent variable (s19) is ordered correctly
+### c) Verifying that dependent variable (s19) is ordered correctly
 ```{r verify_dv_order}
 # Verifying dependent variable order
 unique(ordinalRegres_substanceUse$s19)
@@ -160,43 +163,43 @@ unique(ordinalRegres_substanceUse$s19)
 - yep, looks good.
 
 
-## d) Verifying cell sizes 
-### d1. By social_support_total
+### d) Verifying cell sizes 
+#### d1. By social_support_total
 ```{r}
 # Verifying cell sizes for social support
 xtabs(~s19 + social_support_total, data = ordinalRegres_substanceUse)
 ```
 
-### d2. By ptsd_symptom_total 
+#### d2. By ptsd_symptom_total 
 ```{r}
 # Verifying cell sizes for ptsd
 xtabs(~s19 + ptsd_symptom_total, data = ordinalRegres_substanceUse)
 ```
 
-### d3. By gender
+#### d3. By gender
 ```{r}
 # Verifying cell sizes for gender
 xtabs(~s19 + genero, data = ordinalRegres_substanceUse)
 ```
 
-### d4. By grade
+#### d4. By grade
 ```{r}
 # Verifying cell sizes for grade
 xtabs(~s19 + grado, data = ordinalRegres_substanceUse)
 ```
 
 
-# 2. Descriptive statistics for all students G7-G12 at all substance use levels
+## 2. Descriptive statistics for all students G7-G12 at all substance use levels
 
-## a) Table 1: Variable values by substance use category, gender
+### a) Table 1: Variable values by substance use category, gender
 ```{r tibble_substanceUse_gender}
 
 tibble_substanceUse_gender <- ordinalRegres_substanceUse %>% 
   group_by(s19, genero) %>%
-  summarize(mean_ptsd_symptoms = mean(ptsd_symptom_total),
-            sd_ptsd_symptoms = sd(ptsd_symptom_total),
-            mean_social_support = mean(social_support_total),
-            sd_social_supp = sd(social_support_total),
+  summarize(mean_ptsd_symptoms = round(mean(ptsd_symptom_total), 2),
+            sd_ptsd_symptoms = round(sd(ptsd_symptom_total), 2),
+            mean_social_support = round(mean(social_support_total), 2),
+            sd_social_supp = round(sd(social_support_total), 2),
             sample_size = n())
 datatable(tibble_substanceUse_gender) #show in knitted document
 
@@ -206,15 +209,15 @@ datatable(tibble_substanceUse_gender) #show in knitted document
 
 
 
-## b) Table 2: Variable values by grade, gender
+### b) Table 2: Variable values by grade, gender
 ```{r tibble_grade_gender}
 
 tibble_grade_gender <- ordinalRegres_substanceUse %>% 
   group_by(grado, genero) %>%
-  summarize(mean_ptsd_symptoms = mean(ptsd_symptom_total),
-            sd_ptsd_symptoms = sd(ptsd_symptom_total),
-            mean_social_support = mean(social_support_total),
-            sd_social_supp = sd(social_support_total),
+  summarize(mean_ptsd_symptoms = round(mean(ptsd_symptom_total), 2),
+            sd_ptsd_symptoms = round(sd(ptsd_symptom_total), 2),
+            mean_social_support = round(mean(social_support_total), 2),
+            sd_social_supp = round(sd(social_support_total), 2),
             sample_size = n())
 datatable(tibble_grade_gender) #show in knitted document
 
@@ -222,15 +225,15 @@ datatable(tibble_grade_gender) #show in knitted document
 #ggsave(here("figures", "tibble_grade_gender.pdf"))
 ```
 
-## c) Table 3: Variable values by grade, gender, substance use category
+### c) Table 3: Variable values by grade, gender, substance use category
 ```{r tibble_grade_substanceUse_gender}
 
 tibble_grade_substanceUse_gender <- ordinalRegres_substanceUse %>% 
   group_by(grado, s19, genero) %>%
-  summarize(mean_ptsd_symptoms = mean(ptsd_symptom_total),
-            sd_ptsd_symptoms = sd(ptsd_symptom_total),
-            mean_social_support = mean(social_support_total),
-            sd_social_supp = sd(social_support_total),
+  summarize(mean_ptsd_symptoms = round(mean(ptsd_symptom_total), 2),
+            sd_ptsd_symptoms = round(sd(ptsd_symptom_total), 2),
+            mean_social_support = round(mean(social_support_total), 2),
+            sd_social_supp = round(sd(social_support_total), 2),
             sample_size = n())
 datatable(tibble_grade_substanceUse_gender) #show in knitted document
 
@@ -240,15 +243,15 @@ datatable(tibble_grade_substanceUse_gender) #show in knitted document
 
 
 
-# 3. Ordinal Multiple Linear Regression Model Analysis (all students; n=36K)
-## a) Running the model
+## 3. Ordinal Multiple Linear Regression Model Analysis (all students; n=36K)
+### a) Running the model
     
-In this analysis, we will conduct an ordinal multiple linear regression on **s19 (self-reported substance use)** to see how it changes with respect to three predictor variables: **social support**, **ptsd_symptom_total**, **grade**, **gender**,. 
+In this analysis, we will conduct an ordinal multiple linear regression on **s19 (self-reported substance use)** to see how it changes with respect to three predictor variables: **social support from an adult at home**, **social support from at least one peer**, **social support from a teacher or counselor at school**, **ptsd_symptom_total**, **grade**, and **gender**. 
 
 Here's our model: 
 
 ```{r ordinal_regression}
-clm_with_interaction <- clm(as.factor(s19) ~  q20 + q21 + q22 +
+clm_with_interaction <- clm(s19 ~  q20 + q21 + q22 +
                               ptsd_symptom_total + grado + genero + 
                               genero*ptsd_symptom_total + genero*q20 + 
                               genero*q21 + genero*q22, 
@@ -256,80 +259,59 @@ clm_with_interaction <- clm(as.factor(s19) ~  q20 + q21 + q22 +
                             link = "logit")
 
 #Null model
-null_clm <- clm(as.factor(s19) ~ 1, 
+null_clm <- clm(s19 ~ 1, 
                   data = ordinalRegres_substanceUse, 
                   link = "logit")
 ```
 
 
-### a1. Coefficients: ordinal regression
+#### a1. Coefficients: ordinal regression
 ```{r ordinal_regression_coefficients}
 # Coefficients
 summary(clm_with_interaction)
 ```
 
-### a2. Confidence Intervals: ordinal regression
-```{r ordinal_regression_CI}
-# Confidence intervals
-confint(clm_with_interaction)
+#### a2. Confidence Intervals: ordinal regression
+
+```{r confidenceIntervalsAndCI}
+
+polr_lm_with_interaction <- polr(s19 ~  q20 + q21 + q22 +
+                              ptsd_symptom_total + grado + genero + 
+                              genero*ptsd_symptom_total + genero*q20 + 
+                              genero*q21 + genero*q22, 
+                            data = ordinalRegres_substanceUse, 
+                            Hess = TRUE)
+
+coefAndCI <- cbind("Coefficients" = coef(polr_lm_with_interaction), 
+                            confint(polr_lm_with_interaction))
+
+coefAndCI # Return coefficients and confidence intervals 
 ```
 
-### a3. Odds ratios: ordinal regression
-```{r ordinal_regression_oddsRatiosCoefficients}
-# Produce odds ratios 
-exp(coef(clm_with_interaction))
-```
 
-### a4. Confidence Intervals: odds ratios
-```{r ordinal_regression_oddsRatiosCI}
-# Confidence intervals for odds ratios
-exp(confint(clm_with_interaction))
-```
-
-
-## b) Evaluating model fit
-### b1. Method 1: ANOVA
+### b) Evaluating model fit
+#### b1. Method 1: ANOVA
 ```{r ordinal_regression_anova_stats}
 anova(null_clm, clm_with_interaction)
 ```
 
-### b2. Method 2: Nagelkerke
+
+#### b2. Method 2: Nagelkerke
 ```{r ordinal_regression_nagelkerke}
 nagelkerke(fit = clm_with_interaction,
            null = null_clm)
 ```
 
 
-
-### b3. Testing parallel lines/proportional odds
-
-#### b3.1. Brant test 
+#### b3. Testing parallel lines/proportional odds
 ```{r brant_test}
-forBrant_clm_with_interaction <- polr(as.factor(s19) ~  q20 + q21 + q22 +
-                              ptsd_symptom_total + grado + genero +
-                                genero*ptsd_symptom_total + genero*q20 +
-                                genero*q21 + genero*q22,
-                              data = ordinalRegres_substanceUse,
-                              Hess = TRUE)
-
-brant(forBrant_clm_with_interaction)
+brant(polr_lm_with_interaction)
 ```
 
-#### b3.2. Summary: Brandt Test
-```{r brant_summary}
-summary(forBrant_clm_with_interaction)
-```
 
-#### b3.3. p-values: Brandt Test
-```{r brandt_pValues}
-# for adding p-values
-coeftest(forBrant_clm_with_interaction)
-```
+### c) Tidy model results
 
- 
-## c) Tidy model results
-
-### c1. Coefficients
+#### c1. Tidy coefficients
 
 To get information about the coefficients in a more manageable format (a data frame), use `broom::tidy()`:
 
@@ -341,11 +323,11 @@ clm_tidy
 ```
 
 
-### c2. Deeper Interpretation (NEEDS WORK)
+#### c2. Interpretation of regression coefficients
 
-- **No Substance Use Intercept:** This coefficient value (`r round(clm_tidy$estimate[1],3)`) is not meaningful to interpret here on its own (though should still be included when making predictions). Technically, it is the log odds of the expected substance use of a student with social support value of 0.  Often, the intercept is not useful to consider on its own (and reflects limits to how far we should extrapolate our model results beyond our observed data).
+- **No Substance Use Intercept:** This intercept coefficient value (`r round(clm_tidy$estimate[1],3)`) represents the log odds of a student's self-endorsement of substance use having fallen within the _no substance use category_ given values of 0 for all other coefficients.
 
-- **Low Substance Use Intercept:** This coefficient value (`r round(clm_tidy$estimate[2],3)`) is not meaningful to interpret here on its own (though should still be included when making predictions). Technically, it is the log odds of a student self-reporting low substance use with social support value of 0. Often, the intercept is not useful to consider on its own (and reflects limits to how far we should extrapolate our model results beyond our observed data).
+- **Low Substance Use Intercept:** This intercept coefficient value (`r round(clm_tidy$estimate[2],3)`) is the log odds of a student's self-endorsement of substance use having fallen within the _low substance use category_ given values of 0 for all other coefficients.
 
 - **social_support_adult:**  For those students that endorsed having **adult social support at home** the log odds of high substance use endorsement decreased significantly by `r round(clm_tidy$estimate[3],3)`.
 
@@ -362,70 +344,60 @@ clm_tidy
 - **Interaction: gender & ptsd:** This coefficient describes the interaction between **gender** and **ptsd** symptoms. With all variables  held constant, we expect that students who identify as *female* and who experience ptsd symptoms to endorse substance use by a log odds of `r round(clm_tidy$estimate[8],3)` **less** than students who identify as male and experience ptsd symptoms.
 
 
-### c3. Overall model fit and significance
-
-You can see and parse information for the overall model using `broom::glance()`:
+#### c3. Overall model fit and significance for null and alternative models using `broom::glance()`:
 
 ```{r clm_fit_stats}
-clm_fit_stats <- glance(clm_with_interaction)
+clm_fit_stats <- rbind("clm_model" = glance(clm_with_interaction),
+                       "null_model" = glance(null_clm)) %>%
+         clean_names()
 
 # Return output:
 clm_fit_stats
 ```
 
 
-### c4. The `stargazer` package
-
-Another option is the `stargazer` package, which creates a comprehensive regression table (including in html format). 
-
-Use the `stargazer()` function on your model name to produce the table. **NOTE:** to get this to appear correctly in your knitted html, you need to include two things:
-
-- In the **code chunk header** add an option `results = "asis"` (i.e., the entire code chunk header should look like this: `{r, results = "asis"}`)
-- Include the argument `type = "html"` within the `stargazer()` function as below (since the default is LaTeX)
-
-```{r stargazer, results = "asis"}
-stargazer(clm_with_interaction, type = "html")
+#### c4. Figure 1: Likelihood vs. Odds
+```{r likelihood_vs_odds_fig, echo=FALSE, out.width="50%", fig.cap="Probabilities vs. Odds"}
+knitr::include_graphics(here("img", "prob_vs_odds.png"))
 ```
+(CITATION HERE FOR TABLE)
 
+#### c5. Looking at results as odds ratios with confidence intervals instead of log likelihood
 
-### c5. Looking at results as odds ratios with confidence intervals instead of log likelihood
-```{r odds_ratios_again}
-odds_ratio_clm <- exp(cbind(OR = coef(clm_with_interaction),
-                                                confint(clm_with_interaction)))
+```{r for_Odds}
+forOdds_clm_with_interaction <- polr(s19 ~  q20 + q21 + q22 +
+                              ptsd_symptom_total + grado + genero + 
+                              genero*ptsd_symptom_total + genero*q20 + 
+                              genero*q21 + genero*q22, 
+                            data = ordinalRegres_substanceUse, 
+                            Hess = TRUE)
+
+odds_ratio_clm <- exp(cbind(OR = coef(forOdds_clm_with_interaction), 
+                            confint(forOdds_clm_with_interaction)))
 
 odds_ratio_clm
 ```
 
 
-### c6. Figure 1: Likelihood vs. Odds
-```{r likelihood_vs_odds_fig, echo=FALSE, out.width="50%", fig.cap="Probabilities vs. Odds"}
-knitr::include_graphics(here("img", "prob_vs_odds.png"))
-```
 
-
-### c7. (SECTION BELOW NEEDS WORK)
-```{r tidy_odds_ratio, echo=FALSE}
+#### c7. Interpretation of Odds Ratios
+```{r tidy_odds_ratios, echo=FALSE}
 # creating tidy references for section below
 tidy_odds_ratio_clm <- tidy(odds_ratio_clm)
 ```
 
+- **social support endorsements**,
+  - For students that endorsed having **social support from an adult at home**, the odds of endorsing high substance use decrease by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][1],2)`.
+  - For students that endorsed having **social support from at least one peer**, the odds of endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][2],2)`, 
+  - For students that endorsed having **social support from a counselor or teacher at school**, the odds of endorsing high substance use decreased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][3],2)`. 
 
-- Now we see that for those with increasing **social support endorsements**, the odds of endorsing high substance use (versus low substance use) decreases by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][2],2)`, `r round(tidy_odds_ratio_clm$x[,"OR"][3],2)`, and `r round(tidy_odds_ratio_clm$x[,"OR"][4],2)` respectively. 
+- **PTSD Symptoms**
+  - For each one unit increase in **PTSD Symptom Total**, the odds of a student endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][4],2)`.
 
-- We can also see that with increasing **PTSD Symptom Total**, the odds of endorsing high substance use (versus low substance use) increases by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][5],2)`,
+- For each increase in **Grade level**, the odds of endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][5],2)`, 
 
-- **Grade** was not indicated is significant and therefore should not be interpreted 
-
-- Lastly, we see that if a student is **female**, the odds of endorsing high substance use (versus low substance use) decreases by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][7],2)`.
+- Lastly, an interaction was evidenced, such that if a student was **female and  experiencing ptsd symptoms**, the odds of endorsing high substance use decreased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][7],2)` when compared to males experiencing ptsd symptoms.
  
-For more information on interpreting odds ratios see: [How do I interpret odds ratios in logistic regression?](https://rpubs.com/raoulbia/interpreting_glm_logistic_regression_output). While R produces it, the odds ratio for the intercept is not generally interpreted. 
-
-
-Likelihood ratio test (the deviance residual is -2*log likelihood). See the model’s log likelihood below:
-```{r}
-logLik(clm_with_interaction)
-```
-
-
+For more information on interpreting odds ratios see: [How do I interpret odds ratios in logistic regression?](https://rpubs.com/raoulbia/interpreting_glm_logistic_regression_output). The odds ratios for the intercepts are not generally interpreted. 
 
 

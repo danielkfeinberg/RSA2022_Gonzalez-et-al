@@ -86,13 +86,16 @@ ordinalRegres_substanceUse <- pr_youth_substance_use %>%
                 s10, 
                 s11, 
                 s12, 
-                s19)
+                s19) %>% 
+  rename(district = distrito, 
+         grade = grado, 
+         substanceUse = s19)
 
 # Recoding "99" to "NA"
 ordinalRegres_substanceUse[ordinalRegres_substanceUse==99] <- NA
 
-## Creating new 'genero' variable by recoding femenino=1 as genero=1 (female) and 
-## masculino=1 as genero=0 (male) using some simple math
+## Creating new 'gender' variable by recoding femenino=1 as gender=1 (female) and 
+## masculino=1 as gender=0 (male) using some simple math
 
 # recoding in order to separate genders
 ordinalRegres_substanceUse$femenino[ordinalRegres_substanceUse$femenino == 1] <- 2
@@ -100,24 +103,24 @@ ordinalRegres_substanceUse$masculino[ordinalRegres_substanceUse$masculino == 1] 
 ordinalRegres_substanceUse$masculino[ordinalRegres_substanceUse$masculino == 0] <- 1
 ordinalRegres_substanceUse$femenino[ordinalRegres_substanceUse$femenino == 0] <- 1
 
-# adding new variable named 'genero'
+# adding new variable named 'gender'
 ordinalRegres_substanceUse <- ordinalRegres_substanceUse %>% 
-  mutate(genero = femenino * masculino)
+  mutate(gender = femenino * masculino)
   
 # making female=1 and male=0, while recoding when either both 'masculino' and 
 # 'femenino' or neither of them were indicated as 'NA' 
-ordinalRegres_substanceUse$genero[ordinalRegres_substanceUse$genero == 1] <- NA
-ordinalRegres_substanceUse$genero[ordinalRegres_substanceUse$genero == 2] <- 1
-ordinalRegres_substanceUse$genero[ordinalRegres_substanceUse$genero == 3] <- 0
-ordinalRegres_substanceUse$genero[ordinalRegres_substanceUse$genero == 6] <- NA
+ordinalRegres_substanceUse$gender[ordinalRegres_substanceUse$gender == 1] <- NA
+ordinalRegres_substanceUse$gender[ordinalRegres_substanceUse$gender == 2] <- 1
+ordinalRegres_substanceUse$gender[ordinalRegres_substanceUse$gender == 3] <- 0
+ordinalRegres_substanceUse$gender[ordinalRegres_substanceUse$gender == 6] <- NA
 
 # Pairwise deletion of NA values (removing all rows containing 'NA' values, since 
 # full data is needed for summation variables of ptsd_symptom_total and social_support_total)
 ordinalRegres_substanceUse <- ordinalRegres_substanceUse %>% 
   drop_na()
 
-# labeling 'genero' variable
-ordinalRegres_substanceUse$genero <- factor(ordinalRegres_substanceUse$genero,
+# labeling 'gender' variable
+ordinalRegres_substanceUse$gender <- factor(ordinalRegres_substanceUse$gender,
                                       labels = c("Male", 
                                                  "Female"))
 
@@ -131,12 +134,12 @@ ordinalRegres_substanceUse <- ordinalRegres_substanceUse %>%
                 -masculino)
 
 
-## Recoding 's19' as three-tiered ordinal factor
-ordinalRegres_substanceUse$s19[ordinalRegres_substanceUse$s19 == 2] <- 1
-ordinalRegres_substanceUse$s19[ordinalRegres_substanceUse$s19 == 3] <- 2
-ordinalRegres_substanceUse$s19[ordinalRegres_substanceUse$s19 == 4] <- 2
+## Recoding 'substanceUse' as three-tiered ordinal factor
+ordinalRegres_substanceUse$substanceUse[ordinalRegres_substanceUse$substanceUse == 2] <- 1
+ordinalRegres_substanceUse$substanceUse[ordinalRegres_substanceUse$substanceUse == 3] <- 2
+ordinalRegres_substanceUse$substanceUse[ordinalRegres_substanceUse$substanceUse == 4] <- 2
 
-ordinalRegres_substanceUse$s19 <- ordered(ordinalRegres_substanceUse$s19,
+ordinalRegres_substanceUse$substanceUse <- ordered(ordinalRegres_substanceUse$substanceUse,
                                       labels = c("No Substance Use",
                                                  "Low Substance Use",
                                                  "High Substance Use"))
@@ -155,10 +158,10 @@ str(ordinalRegres_substanceUse)
 ```
 
 
-### c) Verifying that dependent variable (s19) is ordered correctly
+### c) Verifying that dependent variable (substanceUse) is ordered correctly
 ```{r verify_dv_order}
 # Verifying dependent variable order
-unique(ordinalRegres_substanceUse$s19)
+unique(ordinalRegres_substanceUse$substanceUse)
 ```
 - yep, looks good.
 
@@ -167,35 +170,34 @@ unique(ordinalRegres_substanceUse$s19)
 #### d1. By social_support_total
 ```{r}
 # Verifying cell sizes for social support
-xtabs(~s19 + social_support_total, data = ordinalRegres_substanceUse)
+xtabs(~substanceUse + social_support_total, data = ordinalRegres_substanceUse)
 ```
 
 #### d2. By ptsd_symptom_total 
 ```{r}
 # Verifying cell sizes for ptsd
-xtabs(~s19 + ptsd_symptom_total, data = ordinalRegres_substanceUse)
+xtabs(~substanceUse + ptsd_symptom_total, data = ordinalRegres_substanceUse)
 ```
 
 #### d3. By gender
 ```{r}
 # Verifying cell sizes for gender
-xtabs(~s19 + genero, data = ordinalRegres_substanceUse)
+xtabs(~substanceUse + gender, data = ordinalRegres_substanceUse)
 ```
 
 #### d4. By grade
 ```{r}
 # Verifying cell sizes for grade
-xtabs(~s19 + grado, data = ordinalRegres_substanceUse)
+xtabs(~substanceUse + grade, data = ordinalRegres_substanceUse)
 ```
 
 
-## 2. Descriptive statistics for all students G7-G12 at all substance use levels
+## 2. Descriptive statistics for students G7-G12 at all substance use levels
 
 ### a) Table 1: Variable values by substance use category, gender
 ```{r tibble_substanceUse_gender}
-
 tibble_substanceUse_gender <- ordinalRegres_substanceUse %>% 
-  group_by(s19, genero) %>%
+  group_by(substanceUse, gender) %>%
   summarize(mean_ptsd_symptoms = round(mean(ptsd_symptom_total), 2),
             sd_ptsd_symptoms = round(sd(ptsd_symptom_total), 2),
             mean_social_support = round(mean(social_support_total), 2),
@@ -211,9 +213,8 @@ datatable(tibble_substanceUse_gender) #show in knitted document
 
 ### b) Table 2: Variable values by grade, gender
 ```{r tibble_grade_gender}
-
 tibble_grade_gender <- ordinalRegres_substanceUse %>% 
-  group_by(grado, genero) %>%
+  group_by(grade, gender) %>%
   summarize(mean_ptsd_symptoms = round(mean(ptsd_symptom_total), 2),
             sd_ptsd_symptoms = round(sd(ptsd_symptom_total), 2),
             mean_social_support = round(mean(social_support_total), 2),
@@ -227,9 +228,8 @@ datatable(tibble_grade_gender) #show in knitted document
 
 ### c) Table 3: Variable values by grade, gender, substance use category
 ```{r tibble_grade_substanceUse_gender}
-
 tibble_grade_substanceUse_gender <- ordinalRegres_substanceUse %>% 
-  group_by(grado, s19, genero) %>%
+  group_by(grade, substanceUse, gender) %>%
   summarize(mean_ptsd_symptoms = round(mean(ptsd_symptom_total), 2),
             sd_ptsd_symptoms = round(sd(ptsd_symptom_total), 2),
             mean_social_support = round(mean(social_support_total), 2),
@@ -243,23 +243,23 @@ datatable(tibble_grade_substanceUse_gender) #show in knitted document
 
 
 
-## 3. Ordinal Multiple Linear Regression Model Analysis (all students; n=36K)
+## 3. Ordinal (logit) multiple linear regression model analysis
 ### a) Running the model
     
-In this analysis, we will conduct an ordinal multiple linear regression on **s19 (self-reported substance use)** to see how it changes with respect to three predictor variables: **social support from an adult at home**, **social support from at least one peer**, **social support from a teacher or counselor at school**, **ptsd_symptom_total**, **grade**, and **gender**. 
+In this analysis, we conducted an ordinal (logit) multiple linear regression on **substanceUse (self-reported substance use)** to see how it changes with respect to three predictor variables: **social support from an adult at home**, **social support from at least one peer**, **social support from a teacher or counselor at school**, **ptsd_symptom_total**, **grade**, and **gender**. 
 
 Here's our model: 
 
 ```{r ordinal_regression}
-clm_with_interaction <- clm(s19 ~  q20 + q21 + q22 +
-                              ptsd_symptom_total + grado + genero + 
-                              genero*ptsd_symptom_total + genero*q20 + 
-                              genero*q21 + genero*q22, 
+clm_with_interaction <- clm(substanceUse ~  q20 + q21 + q22 +
+                              ptsd_symptom_total + grade + gender + 
+                              gender*ptsd_symptom_total + gender*q20 + 
+                              gender*q21 + gender*q22, 
                             data = ordinalRegres_substanceUse, 
                             link = "logit")
 
 #Null model
-null_clm <- clm(s19 ~ 1, 
+null_clm <- clm(substanceUse ~ 1, 
                   data = ordinalRegres_substanceUse, 
                   link = "logit")
 ```
@@ -271,14 +271,13 @@ null_clm <- clm(s19 ~ 1,
 summary(clm_with_interaction)
 ```
 
-#### a2. Confidence Intervals: ordinal regression
+#### a2. Confidence intervals: ordinal regression
 
 ```{r confidenceIntervalsAndCI}
-
-polr_lm_with_interaction <- polr(s19 ~  q20 + q21 + q22 +
-                              ptsd_symptom_total + grado + genero + 
-                              genero*ptsd_symptom_total + genero*q20 + 
-                              genero*q21 + genero*q22, 
+polr_lm_with_interaction <- polr(substanceUse ~  q20 + q21 + q22 +
+                              ptsd_symptom_total + grade + gender + 
+                              gender*ptsd_symptom_total + gender*q20 + 
+                              gender*q21 + gender*q22, 
                             data = ordinalRegres_substanceUse, 
                             Hess = TRUE)
 
@@ -337,7 +336,7 @@ clm_tidy
 
 - **ptsd_symptom_total** For every one unit increase in **ptsd symptoms** the log odds of high substance use increased significantly by `r round(clm_tidy$estimate[6],3)`.
 
-- **grado:** For each increase in **grade level** the log odds of high substance use increased significantly by `r round(clm_tidy$estimate[7],3)`.  did not appear significant
+- **grade:** For each increase in **grade level** the log odds of high substance use increased significantly by `r round(clm_tidy$estimate[7],3)`.  did not appear significant
 
 - **gender:** This coefficient is also for a categorical variable (where male is the reference level). We interpret the coefficient for *gender* (`r round(clm_tidy$estimate[8],3)`) as follows: if all variables are held constant, we expect a *female* student to endorse substance use by a log odds of `r round(clm_tidy$estimate[7],3)` **less** than a male student, on average.
 
@@ -360,15 +359,15 @@ clm_fit_stats
 ```{r likelihood_vs_odds_fig, echo=FALSE, out.width="50%", fig.cap="Probabilities vs. Odds"}
 knitr::include_graphics(here("img", "prob_vs_odds.png"))
 ```
-(CITATION HERE FOR TABLE)
+[Citation](https://keydifferences.com/difference-between-odds-and-probability.html)
 
 #### c5. Looking at results as odds ratios with confidence intervals instead of log likelihood
 
 ```{r for_Odds}
-forOdds_clm_with_interaction <- polr(s19 ~  q20 + q21 + q22 +
-                              ptsd_symptom_total + grado + genero + 
-                              genero*ptsd_symptom_total + genero*q20 + 
-                              genero*q21 + genero*q22, 
+forOdds_clm_with_interaction <- polr(substanceUse ~  q20 + q21 + q22 +
+                              ptsd_symptom_total + grade + gender + 
+                              gender*ptsd_symptom_total + gender*q20 + 
+                              gender*q21 + gender*q22, 
                             data = ordinalRegres_substanceUse, 
                             Hess = TRUE)
 
@@ -380,24 +379,23 @@ odds_ratio_clm
 
 
 
-#### c7. Interpretation of Odds Ratios
+#### c7. Interpretation of odds ratios
 ```{r tidy_odds_ratios, echo=FALSE}
 # creating tidy references for section below
 tidy_odds_ratio_clm <- tidy(odds_ratio_clm)
 ```
 
-- **social support endorsements**,
-  - For students that endorsed having **social support from an adult at home**, the odds of endorsing high substance use decrease by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][1],2)`.
-  - For students that endorsed having **social support from at least one peer**, the odds of endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][2],2)`, 
-  - For students that endorsed having **social support from a counselor or teacher at school**, the odds of endorsing high substance use decreased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][3],2)`. 
+- For students that endorsed having **social support from an adult at home**, the odds of endorsing high substance use decrease by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][1],2)`.
 
-- **PTSD Symptoms**
-  - For each one unit increase in **PTSD Symptom Total**, the odds of a student endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][4],2)`.
+- For students that endorsed having **social support from at least one peer**, the odds of endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][2],2)`, 
+
+- For students that endorsed having **social support from a counselor or teacher at school**, the odds of endorsing high substance use decreased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][3],2)`. 
+ 
+- For each one unit increase in **PTSD Symptom Total**, the odds of a student endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][4],2)`.
 
 - For each increase in **Grade level**, the odds of endorsing high substance use increased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][5],2)`, 
 
 - Lastly, an interaction was evidenced, such that if a student was **female and  experiencing ptsd symptoms**, the odds of endorsing high substance use decreased by a factor of approximately `r round(tidy_odds_ratio_clm$x[,"OR"][7],2)` when compared to males experiencing ptsd symptoms.
  
-For more information on interpreting odds ratios see: [How do I interpret odds ratios in logistic regression?](https://rpubs.com/raoulbia/interpreting_glm_logistic_regression_output). The odds ratios for the intercepts are not generally interpreted. 
-
+- Please note: The odds ratios for the intercepts are generally not interpreted.
 

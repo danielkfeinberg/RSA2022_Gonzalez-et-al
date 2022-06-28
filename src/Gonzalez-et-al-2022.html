@@ -4347,64 +4347,67 @@ regression</h2>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                s10, </span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                s11, </span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                s12, </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                s19)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Recoding &quot;99&quot; to &quot;NA&quot;</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse[ordinalRegres_substanceUse<span class="sc">==</span><span class="dv">99</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                s19) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">district =</span> distrito, </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">grade =</span> grado, </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">substanceUse =</span> s19)</span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Creating new &#39;genero&#39; variable by recoding femenino=1 as genero=1 (female) and </span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="do">## masculino=1 as genero=0 (male) using some simple math</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Recoding &quot;99&quot; to &quot;NA&quot;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse[ordinalRegres_substanceUse<span class="sc">==</span><span class="dv">99</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># recoding in order to separate genders</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>femenino[ordinalRegres_substanceUse<span class="sc">$</span>femenino <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>masculino[ordinalRegres_substanceUse<span class="sc">$</span>masculino <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>masculino[ordinalRegres_substanceUse<span class="sc">$</span>masculino <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>femenino[ordinalRegres_substanceUse<span class="sc">$</span>femenino <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># adding new variable named &#39;genero&#39;</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">genero =</span> femenino <span class="sc">*</span> masculino)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># making female=1 and male=0, while recoding when either both &#39;masculino&#39; and </span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"># &#39;femenino&#39; or neither of them were indicated as &#39;NA&#39; </span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>genero[ordinalRegres_substanceUse<span class="sc">$</span>genero <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>genero[ordinalRegres_substanceUse<span class="sc">$</span>genero <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>genero[ordinalRegres_substanceUse<span class="sc">$</span>genero <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>genero[ordinalRegres_substanceUse<span class="sc">$</span>genero <span class="sc">==</span> <span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Pairwise deletion of NA values (removing all rows containing &#39;NA&#39; values, since </span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co"># full data is needed for summation variables of ptsd_symptom_total and social_support_total)</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># labeling &#39;genero&#39; variable</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>genero <span class="ot">&lt;-</span> <span class="fu">factor</span>(ordinalRegres_substanceUse<span class="sc">$</span>genero,</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, </span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&quot;Female&quot;</span>))</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="co"># All looks good, so I am removing &#39;femenino&#39; and &#39;masculino&#39; from the dataframe</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="co"># and adding variables &#39;social_support_total&#39; and &#39;ptsd_symptom_total&#39;</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ptsd_symptom_total =</span> </span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>           s1 <span class="sc">+</span> s2 <span class="sc">+</span> s3 <span class="sc">+</span> s4 <span class="sc">+</span> s5 <span class="sc">+</span> s6 <span class="sc">+</span> s7 <span class="sc">+</span> s8 <span class="sc">+</span> s9 <span class="sc">+</span> s10 <span class="sc">+</span> s11 <span class="sc">+</span> s12) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">social_support_total =</span> q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>femenino,</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span>masculino)</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="do">## Recoding &#39;s19&#39; as three-tiered ordinal factor</span></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>s19[ordinalRegres_substanceUse<span class="sc">$</span>s19 <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>s19[ordinalRegres_substanceUse<span class="sc">$</span>s19 <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>s19[ordinalRegres_substanceUse<span class="sc">$</span>s19 <span class="sc">==</span> <span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>s19 <span class="ot">&lt;-</span> <span class="fu">ordered</span>(ordinalRegres_substanceUse<span class="sc">$</span>s19,</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No Substance Use&quot;</span>,</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&quot;Low Substance Use&quot;</span>,</span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&quot;High Substance Use&quot;</span>))</span></code></pre></div>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Creating new &#39;gender&#39; variable by recoding femenino=1 as gender=1 (female) and </span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="do">## masculino=1 as gender=0 (male) using some simple math</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># recoding in order to separate genders</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>femenino[ordinalRegres_substanceUse<span class="sc">$</span>femenino <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>masculino[ordinalRegres_substanceUse<span class="sc">$</span>masculino <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>masculino[ordinalRegres_substanceUse<span class="sc">$</span>masculino <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>femenino[ordinalRegres_substanceUse<span class="sc">$</span>femenino <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># adding new variable named &#39;gender&#39;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> femenino <span class="sc">*</span> masculino)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># making female=1 and male=0, while recoding when either both &#39;masculino&#39; and </span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># &#39;femenino&#39; or neither of them were indicated as &#39;NA&#39; </span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>gender[ordinalRegres_substanceUse<span class="sc">$</span>gender <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>gender[ordinalRegres_substanceUse<span class="sc">$</span>gender <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>gender[ordinalRegres_substanceUse<span class="sc">$</span>gender <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>gender[ordinalRegres_substanceUse<span class="sc">$</span>gender <span class="sc">==</span> <span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Pairwise deletion of NA values (removing all rows containing &#39;NA&#39; values, since </span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co"># full data is needed for summation variables of ptsd_symptom_total and social_support_total)</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co"># labeling &#39;gender&#39; variable</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">factor</span>(ordinalRegres_substanceUse<span class="sc">$</span>gender,</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, </span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&quot;Female&quot;</span>))</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="co"># All looks good, so I am removing &#39;femenino&#39; and &#39;masculino&#39; from the dataframe</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="co"># and adding variables &#39;social_support_total&#39; and &#39;ptsd_symptom_total&#39;</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ptsd_symptom_total =</span> </span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>           s1 <span class="sc">+</span> s2 <span class="sc">+</span> s3 <span class="sc">+</span> s4 <span class="sc">+</span> s5 <span class="sc">+</span> s6 <span class="sc">+</span> s7 <span class="sc">+</span> s8 <span class="sc">+</span> s9 <span class="sc">+</span> s10 <span class="sc">+</span> s11 <span class="sc">+</span> s12) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">social_support_total =</span> q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>femenino,</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span>masculino)</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="do">## Recoding &#39;substanceUse&#39; as three-tiered ordinal factor</span></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>substanceUse[ordinalRegres_substanceUse<span class="sc">$</span>substanceUse <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>substanceUse[ordinalRegres_substanceUse<span class="sc">$</span>substanceUse <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>substanceUse[ordinalRegres_substanceUse<span class="sc">$</span>substanceUse <span class="sc">==</span> <span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>ordinalRegres_substanceUse<span class="sc">$</span>substanceUse <span class="ot">&lt;-</span> <span class="fu">ordered</span>(ordinalRegres_substanceUse<span class="sc">$</span>substanceUse,</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No Substance Use&quot;</span>,</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&quot;Low Substance Use&quot;</span>,</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&quot;High Substance Use&quot;</span>))</span></code></pre></div>
 <div id="a-summaries-for-variables-included-in-ordinal-regression" class="section level3">
 <h3>a) Summaries for variables included in ordinal regression</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ordinalRegres_substanceUse)</span></code></pre></div>
-<pre><code>##     region            distrito             grado             q20       
+<pre><code>##     region            district             grade             q20       
 ##  Length:36485       Length:36485       Min.   : 7.000   Min.   :0.000  
 ##  Class :character   Class :character   1st Qu.: 8.000   1st Qu.:1.000  
 ##  Mode  :character   Mode  :character   Median : 9.000   Median :1.000  
@@ -4432,7 +4435,7 @@ regression</h2>
 ##  Mean   :0.2277   Mean   :0.7088   Mean   :0.7415   Mean   :0.2858  
 ##  3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000  
 ##  Max.   :4.0000   Max.   :4.0000   Max.   :4.0000   Max.   :4.0000  
-##       s11              s12                       s19           genero     
+##       s11              s12                   substanceUse      gender     
 ##  Min.   :0.0000   Min.   :0.00   No Substance Use  :34075   Male  :17969  
 ##  1st Qu.:0.0000   1st Qu.:0.00   Low Substance Use : 1741   Female:18516  
 ##  Median :0.0000   Median :1.00   High Substance Use:  669                 
@@ -4452,8 +4455,8 @@ regression</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(ordinalRegres_substanceUse)</span></code></pre></div>
 <pre><code>## tibble [36,485 × 22] (S3: tbl_df/tbl/data.frame)
 ##  $ region              : chr [1:36485] &quot;ARECIBO&quot; &quot;ARECIBO&quot; &quot;ARECIBO&quot; &quot;ARECIBO&quot; ...
-##  $ distrito            : chr [1:36485] &quot;ARECIBO&quot; &quot;ARECIBO&quot; &quot;ARECIBO&quot; &quot;ARECIBO&quot; ...
-##  $ grado               : num [1:36485] 8 8 8 8 8 8 7 7 7 8 ...
+##  $ district            : chr [1:36485] &quot;ARECIBO&quot; &quot;ARECIBO&quot; &quot;ARECIBO&quot; &quot;ARECIBO&quot; ...
+##  $ grade               : num [1:36485] 8 8 8 8 8 8 7 7 7 8 ...
 ##  $ q20                 : num [1:36485] 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ q21                 : num [1:36485] 1 1 1 1 1 1 1 0 1 1 ...
 ##  $ q22                 : num [1:36485] 1 1 0 1 0 1 0 0 1 1 ...
@@ -4469,15 +4472,16 @@ regression</h2>
 ##  $ s10                 : num [1:36485] 0 0 2 0 0 0 0 0 0 0 ...
 ##  $ s11                 : num [1:36485] 0 0 2 0 0 0 1 0 0 0 ...
 ##  $ s12                 : num [1:36485] 3 0 2 4 1 4 2 1 0 3 ...
-##  $ s19                 : Ord.factor w/ 3 levels &quot;No Substance Use&quot;&lt;..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ genero              : Factor w/ 2 levels &quot;Male&quot;,&quot;Female&quot;: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ substanceUse        : Ord.factor w/ 3 levels &quot;No Substance Use&quot;&lt;..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ gender              : Factor w/ 2 levels &quot;Male&quot;,&quot;Female&quot;: 2 2 2 2 2 2 2 2 2 2 ...
 ##  $ ptsd_symptom_total  : num [1:36485] 8 2 12 4 1 4 8 2 5 4 ...
 ##  $ social_support_total: num [1:36485] 3 3 2 3 2 3 2 1 3 3 ...</code></pre>
 </div>
-<div id="c-verifying-that-dependent-variable-s19-is-ordered-correctly" class="section level3">
-<h3>c) Verifying that dependent variable (s19) is ordered correctly</h3>
+<div id="c-verifying-that-dependent-variable-substanceuse-is-ordered-correctly" class="section level3">
+<h3>c) Verifying that dependent variable (substanceUse) is ordered
+correctly</h3>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying dependent variable order</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ordinalRegres_substanceUse<span class="sc">$</span>s19)</span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ordinalRegres_substanceUse<span class="sc">$</span>substanceUse)</span></code></pre></div>
 <pre><code>## [1] No Substance Use   Low Substance Use  High Substance Use
 ## Levels: No Substance Use &lt; Low Substance Use &lt; High Substance Use</code></pre>
 <ul>
@@ -4489,9 +4493,9 @@ regression</h2>
 <div id="d1.-by-social_support_total" class="section level4">
 <h4>d1. By social_support_total</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying cell sizes for social support</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>s19 <span class="sc">+</span> social_support_total, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>substanceUse <span class="sc">+</span> social_support_total, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
 <pre><code>##                     social_support_total
-## s19                      0     1     2     3
+## substanceUse             0     1     2     3
 ##   No Substance Use     668  2930 12667 17810
 ##   Low Substance Use     54   189   742   756
 ##   High Substance Use    45    82   281   261</code></pre>
@@ -4499,29 +4503,29 @@ regression</h2>
 <div id="d2.-by-ptsd_symptom_total" class="section level4">
 <h4>d2. By ptsd_symptom_total</h4>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying cell sizes for ptsd</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>s19 <span class="sc">+</span> ptsd_symptom_total, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>substanceUse <span class="sc">+</span> ptsd_symptom_total, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
 <pre><code>##                     ptsd_symptom_total
-## s19                     0    1    2    3    4    5    6    7    8    9   10
+## substanceUse            0    1    2    3    4    5    6    7    8    9   10
 ##   No Substance Use   3166 2607 2634 3017 2851 2554 2279 1990 1790 1596 1337
 ##   Low Substance Use    41   44   61   88   82   99   99   96   90   78   97
 ##   High Substance Use   33   26   17   27   32   33   27   25   36   29   38
 ##                     ptsd_symptom_total
-## s19                    11   12   13   14   15   16   17   18   19   20   21
+## substanceUse           11   12   13   14   15   16   17   18   19   20   21
 ##   No Substance Use   1163 1013  852  740  655  574  496  434  378  288  274
 ##   Low Substance Use    83   96   79   68   76   56   61   50   40   31   31
 ##   High Substance Use   28   33   15   22   32   13   23   17    9   29   12
 ##                     ptsd_symptom_total
-## s19                    22   23   24   25   26   27   28   29   30   31   32
+## substanceUse           22   23   24   25   26   27   28   29   30   31   32
 ##   No Substance Use    241  197  163  131  110  109   79   73   51   42   38
 ##   Low Substance Use    30   25   32   19   18   14    7   12    5    4    5
 ##   High Substance Use   10   12   13   12   12    5    5    4    2    3    2
 ##                     ptsd_symptom_total
-## s19                    33   34   35   36   37   38   39   40   41   42   43
+## substanceUse           33   34   35   36   37   38   39   40   41   42   43
 ##   No Substance Use     43   30   13   13   13   11    8    4    4    5    3
 ##   Low Substance Use     1    7    5    0    3    1    2    1    1    1    1
 ##   High Substance Use    2    2    2    7    5    5    0    2    2    0    2
 ##                     ptsd_symptom_total
-## s19                    44   45   46   47   48
+## substanceUse           44   45   46   47   48
 ##   No Substance Use      1    1    1    2    1
 ##   Low Substance Use     0    0    0    0    1
 ##   High Substance Use    2    0    0    1    1</code></pre>
@@ -4529,9 +4533,9 @@ regression</h2>
 <div id="d3.-by-gender" class="section level4">
 <h4>d3. By gender</h4>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying cell sizes for gender</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>s19 <span class="sc">+</span> genero, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
-<pre><code>##                     genero
-## s19                   Male Female
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>substanceUse <span class="sc">+</span> gender, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
+<pre><code>##                     gender
+## substanceUse          Male Female
 ##   No Substance Use   16694  17381
 ##   Low Substance Use    860    881
 ##   High Substance Use   415    254</code></pre>
@@ -4539,45 +4543,45 @@ regression</h2>
 <div id="d4.-by-grade" class="section level4">
 <h4>d4. By grade</h4>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifying cell sizes for grade</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>s19 <span class="sc">+</span> grado, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
-<pre><code>##                     grado
-## s19                     7    8    9   10   11   12
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>substanceUse <span class="sc">+</span> grade, <span class="at">data =</span> ordinalRegres_substanceUse)</span></code></pre></div>
+<pre><code>##                     grade
+## substanceUse            7    8    9   10   11   12
 ##   No Substance Use   6609 6422 5500 5476 5468 4600
 ##   Low Substance Use   104  146  222  304  415  550
 ##   High Substance Use   41   52   85  106  160  225</code></pre>
 </div>
 </div>
 </div>
-<div id="descriptive-statistics-for-all-students-g7-g12-at-all-substance-use-levels" class="section level2">
-<h2>2. Descriptive statistics for all students G7-G12 at all substance
-use levels</h2>
+<div id="descriptive-statistics-for-students-g7-g12-at-all-substance-use-levels" class="section level2">
+<h2>2. Descriptive statistics for students G7-G12 at all substance use
+levels</h2>
 <div id="a-table-1-variable-values-by-substance-use-category-gender" class="section level3">
 <h3>a) Table 1: Variable values by substance use category, gender</h3>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tibble_substanceUse_gender <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(s19, genero) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(substanceUse, gender) <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ptsd_symptoms =</span> <span class="fu">round</span>(<span class="fu">mean</span>(ptsd_symptom_total), <span class="dv">2</span>),</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_ptsd_symptoms =</span> <span class="fu">round</span>(<span class="fu">sd</span>(ptsd_symptom_total), <span class="dv">2</span>),</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_social_support =</span> <span class="fu">round</span>(<span class="fu">mean</span>(social_support_total), <span class="dv">2</span>),</span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_social_supp =</span> <span class="fu">round</span>(<span class="fu">sd</span>(social_support_total), <span class="dv">2</span>),</span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sample_size =</span> <span class="fu">n</span>())</span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(tibble_substanceUse_gender) <span class="co">#show in knitted document</span></span></code></pre></div>
-<div id="htmlwidget-935bebdaf80008476a79" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-935bebdaf80008476a79">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use"],["Male","Female","Male","Female","Male","Female"],[6.17,8.33,10.25,12.87,11.38,15.2],[5.81,6.9,7.21,7.76,9.26,9.5],[2.32,2.47,2.23,2.3,2.13,2.14],[0.76,0.68,0.8,0.75,0.87,0.88],[16694,17381,860,881,415,254]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>s19<\/th>\n      <th>genero<\/th>\n      <th>mean_ptsd_symptoms<\/th>\n      <th>sd_ptsd_symptoms<\/th>\n      <th>mean_social_support<\/th>\n      <th>sd_social_supp<\/th>\n      <th>sample_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-e37ac470c338c52ddfed" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e37ac470c338c52ddfed">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use"],["Male","Female","Male","Female","Male","Female"],[6.17,8.33,10.25,12.87,11.38,15.2],[5.81,6.9,7.21,7.76,9.26,9.5],[2.32,2.47,2.23,2.3,2.13,2.14],[0.76,0.68,0.8,0.75,0.87,0.88],[16694,17381,860,881,415,254]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>substanceUse<\/th>\n      <th>gender<\/th>\n      <th>mean_ptsd_symptoms<\/th>\n      <th>sd_ptsd_symptoms<\/th>\n      <th>mean_social_support<\/th>\n      <th>sd_social_supp<\/th>\n      <th>sample_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To save full page graph in figures folder</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave(here(&quot;figures&quot;, &quot;tibble_substanceUse_gender.pdf&quot;))</span></span></code></pre></div>
 </div>
 <div id="b-table-2-variable-values-by-grade-gender" class="section level3">
 <h3>b) Table 2: Variable values by grade, gender</h3>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tibble_grade_gender <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grado, genero) <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grade, gender) <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ptsd_symptoms =</span> <span class="fu">round</span>(<span class="fu">mean</span>(ptsd_symptom_total), <span class="dv">2</span>),</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_ptsd_symptoms =</span> <span class="fu">round</span>(<span class="fu">sd</span>(ptsd_symptom_total), <span class="dv">2</span>),</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_social_support =</span> <span class="fu">round</span>(<span class="fu">mean</span>(social_support_total), <span class="dv">2</span>),</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_social_supp =</span> <span class="fu">round</span>(<span class="fu">sd</span>(social_support_total), <span class="dv">2</span>),</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sample_size =</span> <span class="fu">n</span>())</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(tibble_grade_gender) <span class="co">#show in knitted document</span></span></code></pre></div>
-<div id="htmlwidget-f2700c057a362457588b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f2700c057a362457588b">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],[7,7,8,8,9,9,10,10,11,11,12,12],["Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female"],[6.42,7.7,6.02,8,5.94,8.75,6.54,8.84,6.96,9.36,7.24,9.34],[6.17,6.81,5.64,6.73,5.6,7.2,6.13,7.08,6.26,7.15,6.74,7.47],[2.3,2.5,2.31,2.48,2.28,2.42,2.29,2.4,2.34,2.46,2.37,2.47],[0.79,0.68,0.78,0.67,0.76,0.69,0.77,0.71,0.75,0.68,0.75,0.71],[3390,3364,3411,3209,2912,2895,2840,3046,2925,3118,2491,2884]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grado<\/th>\n      <th>genero<\/th>\n      <th>mean_ptsd_symptoms<\/th>\n      <th>sd_ptsd_symptoms<\/th>\n      <th>mean_social_support<\/th>\n      <th>sd_social_supp<\/th>\n      <th>sample_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-f442976d3f3dfd4ea7cb" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f442976d3f3dfd4ea7cb">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],[7,7,8,8,9,9,10,10,11,11,12,12],["Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female"],[6.42,7.7,6.02,8,5.94,8.75,6.54,8.84,6.96,9.36,7.24,9.34],[6.17,6.81,5.64,6.73,5.6,7.2,6.13,7.08,6.26,7.15,6.74,7.47],[2.3,2.5,2.31,2.48,2.28,2.42,2.29,2.4,2.34,2.46,2.37,2.47],[0.79,0.68,0.78,0.67,0.76,0.69,0.77,0.71,0.75,0.68,0.75,0.71],[3390,3364,3411,3209,2912,2895,2840,3046,2925,3118,2491,2884]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grade<\/th>\n      <th>gender<\/th>\n      <th>mean_ptsd_symptoms<\/th>\n      <th>sd_ptsd_symptoms<\/th>\n      <th>mean_social_support<\/th>\n      <th>sd_social_supp<\/th>\n      <th>sample_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To save full page graph in figures folder</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave(here(&quot;figures&quot;, &quot;tibble_grade_gender.pdf&quot;))</span></span></code></pre></div>
 </div>
@@ -4585,41 +4589,41 @@ use levels</h2>
 <h3>c) Table 3: Variable values by grade, gender, substance use
 category</h3>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>tibble_grade_substanceUse_gender <span class="ot">&lt;-</span> ordinalRegres_substanceUse <span class="sc">%&gt;%</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grado, s19, genero) <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grade, substanceUse, gender) <span class="sc">%&gt;%</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ptsd_symptoms =</span> <span class="fu">round</span>(<span class="fu">mean</span>(ptsd_symptom_total), <span class="dv">2</span>),</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_ptsd_symptoms =</span> <span class="fu">round</span>(<span class="fu">sd</span>(ptsd_symptom_total), <span class="dv">2</span>),</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_social_support =</span> <span class="fu">round</span>(<span class="fu">mean</span>(social_support_total), <span class="dv">2</span>),</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_social_supp =</span> <span class="fu">round</span>(<span class="fu">sd</span>(social_support_total), <span class="dv">2</span>),</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sample_size =</span> <span class="fu">n</span>())</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(tibble_grade_substanceUse_gender) <span class="co">#show in knitted document</span></span></code></pre></div>
-<div id="htmlwidget-6870e1760b70997e419e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6870e1760b70997e419e">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36"],[7,7,7,7,7,7,8,8,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,11,11,11,11,11,11,12,12,12,12,12,12],["No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use"],["Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female"],[6.31,7.59,9.84,14.02,12.52,14.2,5.89,7.87,10.04,12.29,9.91,12.12,5.75,8.43,9.82,13.3,8.84,16.93,6.16,8.53,11.17,12.65,11.09,16.05,6.45,9.02,11.05,12.7,11.33,14.65,6.62,8.74,9.43,12.89,12.52,15.03],[6.05,6.73,7.33,7.47,11.15,11.55,5.54,6.65,7.02,7.65,7.58,9.38,5.48,6.94,6.15,8.42,7.23,10.61,5.8,6.89,7.01,7.95,9.84,8.81,5.78,6.98,8.1,7.75,8.56,8.47,6.25,7.17,6.94,7.5,9.93,9.66],[2.31,2.51,2.18,2.22,2.03,1.9,2.32,2.49,2.17,2.25,2.09,2.18,2.3,2.43,1.98,2.17,1.67,2.21,2.3,2.41,2.2,2.28,2.11,2.05,2.35,2.48,2.26,2.29,2.28,2.23,2.38,2.49,2.35,2.38,2.2,2.11],[0.79,0.68,0.88,0.8,0.91,0.74,0.78,0.67,0.79,0.81,0.82,0.88,0.75,0.67,0.86,0.82,0.99,0.84,0.76,0.7,0.77,0.73,0.93,1.01,0.74,0.67,0.82,0.74,0.69,0.92,0.75,0.7,0.74,0.69,0.9,0.84],[3304,3305,55,49,31,10,3307,3115,69,77,35,17,2763,2737,106,116,43,42,2625,2851,149,155,66,40,2610,2858,207,208,108,52,2085,2515,274,276,132,93]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grado<\/th>\n      <th>s19<\/th>\n      <th>genero<\/th>\n      <th>mean_ptsd_symptoms<\/th>\n      <th>sd_ptsd_symptoms<\/th>\n      <th>mean_social_support<\/th>\n      <th>sd_social_supp<\/th>\n      <th>sample_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c29d2c1fc8c3327374ea" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c29d2c1fc8c3327374ea">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36"],[7,7,7,7,7,7,8,8,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,10,11,11,11,11,11,11,12,12,12,12,12,12],["No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use","No Substance Use","No Substance Use","Low Substance Use","Low Substance Use","High Substance Use","High Substance Use"],["Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female","Male","Female"],[6.31,7.59,9.84,14.02,12.52,14.2,5.89,7.87,10.04,12.29,9.91,12.12,5.75,8.43,9.82,13.3,8.84,16.93,6.16,8.53,11.17,12.65,11.09,16.05,6.45,9.02,11.05,12.7,11.33,14.65,6.62,8.74,9.43,12.89,12.52,15.03],[6.05,6.73,7.33,7.47,11.15,11.55,5.54,6.65,7.02,7.65,7.58,9.38,5.48,6.94,6.15,8.42,7.23,10.61,5.8,6.89,7.01,7.95,9.84,8.81,5.78,6.98,8.1,7.75,8.56,8.47,6.25,7.17,6.94,7.5,9.93,9.66],[2.31,2.51,2.18,2.22,2.03,1.9,2.32,2.49,2.17,2.25,2.09,2.18,2.3,2.43,1.98,2.17,1.67,2.21,2.3,2.41,2.2,2.28,2.11,2.05,2.35,2.48,2.26,2.29,2.28,2.23,2.38,2.49,2.35,2.38,2.2,2.11],[0.79,0.68,0.88,0.8,0.91,0.74,0.78,0.67,0.79,0.81,0.82,0.88,0.75,0.67,0.86,0.82,0.99,0.84,0.76,0.7,0.77,0.73,0.93,1.01,0.74,0.67,0.82,0.74,0.69,0.92,0.75,0.7,0.74,0.69,0.9,0.84],[3304,3305,55,49,31,10,3307,3115,69,77,35,17,2763,2737,106,116,43,42,2625,2851,149,155,66,40,2610,2858,207,208,108,52,2085,2515,274,276,132,93]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grade<\/th>\n      <th>substanceUse<\/th>\n      <th>gender<\/th>\n      <th>mean_ptsd_symptoms<\/th>\n      <th>sd_ptsd_symptoms<\/th>\n      <th>mean_social_support<\/th>\n      <th>sd_social_supp<\/th>\n      <th>sample_size<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To save full page graph in figures folder</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave(here(&quot;figures&quot;, &quot;tibble_grade_substanceUse_gender.pdf&quot;))</span></span></code></pre></div>
 </div>
 </div>
-<div id="ordinal-multiple-linear-regression-model-analysis-all-students-n36k" class="section level2">
-<h2>3. Ordinal Multiple Linear Regression Model Analysis (all students;
-n=36K)</h2>
+<div id="ordinal-logit-multiple-linear-regression-model-analysis" class="section level2">
+<h2>3. Ordinal (logit) multiple linear regression model analysis</h2>
 <div id="a-running-the-model" class="section level3">
 <h3>a) Running the model</h3>
-<p>In this analysis, we will conduct an ordinal multiple linear
-regression on <strong>s19 (self-reported substance use)</strong> to see
-how it changes with respect to three predictor variables: <strong>social
-support from an adult at home</strong>, <strong>social support from at
-least one peer</strong>, <strong>social support from a teacher or
-counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
-<strong>grade</strong>, and <strong>gender</strong>.</p>
+<p>In this analysis, we conducted an ordinal (logit) multiple linear
+regression on <strong>substanceUse (self-reported substance
+use)</strong> to see how it changes with respect to three predictor
+variables: <strong>social support from an adult at home</strong>,
+<strong>social support from at least one peer</strong>, <strong>social
+support from a teacher or counselor at school</strong>,
+<strong>ptsd_symptom_total</strong>, <strong>grade</strong>, and
+<strong>gender</strong>.</p>
 <p>Here’s our model:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>clm_with_interaction <span class="ot">&lt;-</span> <span class="fu">clm</span>(s19 <span class="sc">~</span>  q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22 <span class="sc">+</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                              ptsd_symptom_total <span class="sc">+</span> grado <span class="sc">+</span> genero <span class="sc">+</span> </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                              genero<span class="sc">*</span>ptsd_symptom_total <span class="sc">+</span> genero<span class="sc">*</span>q20 <span class="sc">+</span> </span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                              genero<span class="sc">*</span>q21 <span class="sc">+</span> genero<span class="sc">*</span>q22, </span>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>clm_with_interaction <span class="ot">&lt;-</span> <span class="fu">clm</span>(substanceUse <span class="sc">~</span>  q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22 <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                              ptsd_symptom_total <span class="sc">+</span> grade <span class="sc">+</span> gender <span class="sc">+</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                              gender<span class="sc">*</span>ptsd_symptom_total <span class="sc">+</span> gender<span class="sc">*</span>q20 <span class="sc">+</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                              gender<span class="sc">*</span>q21 <span class="sc">+</span> gender<span class="sc">*</span>q22, </span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> ordinalRegres_substanceUse, </span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Null model</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>null_clm <span class="ot">&lt;-</span> <span class="fu">clm</span>(s19 <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>null_clm <span class="ot">&lt;-</span> <span class="fu">clm</span>(substanceUse <span class="sc">~</span> <span class="dv">1</span>, </span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> ordinalRegres_substanceUse, </span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span></code></pre></div>
 <div id="a1.-coefficients-ordinal-regression" class="section level4">
@@ -4627,7 +4631,7 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficients</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(clm_with_interaction)</span></code></pre></div>
 <pre><code>## formula: 
-## s19 ~ q20 + q21 + q22 + ptsd_symptom_total + grado + genero + genero * ptsd_symptom_total + genero * q20 + genero * q21 + genero * q22
+## substanceUse ~ q20 + q21 + q22 + ptsd_symptom_total + grade + gender + gender * ptsd_symptom_total + gender * q20 + gender * q21 + gender * q22
 ## data:    ordinalRegres_substanceUse
 ## 
 ##  link  threshold nobs  logLik   AIC      niter max.grad cond.H 
@@ -4639,12 +4643,12 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 ## q21                              0.273027   0.091584   2.981 0.002872 ** 
 ## q22                             -0.241849   0.062463  -3.872 0.000108 ***
 ## ptsd_symptom_total               0.086179   0.003869  22.276  &lt; 2e-16 ***
-## grado                            0.387776   0.014076  27.549  &lt; 2e-16 ***
-## generoFemale                    -0.195315   0.178714  -1.093 0.274442    
-## ptsd_symptom_total:generoFemale -0.014565   0.005342  -2.726 0.006403 ** 
-## q20:generoFemale                -0.023452   0.151757  -0.155 0.877185    
-## q21:generoFemale                -0.034089   0.140895  -0.242 0.808823    
-## q22:generoFemale                -0.049490   0.090310  -0.548 0.583690    
+## grade                            0.387776   0.014076  27.549  &lt; 2e-16 ***
+## genderFemale                    -0.195315   0.178714  -1.093 0.274442    
+## ptsd_symptom_total:genderFemale -0.014565   0.005342  -2.726 0.006403 ** 
+## q20:genderFemale                -0.023452   0.151757  -0.155 0.877185    
+## q21:genderFemale                -0.034089   0.140895  -0.242 0.808823    
+## q22:genderFemale                -0.049490   0.090310  -0.548 0.583690    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -4654,11 +4658,11 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 ## Low Substance Use|High Substance Use   7.7850     0.1862   41.82</code></pre>
 </div>
 <div id="a2.-confidence-intervals-ordinal-regression" class="section level4">
-<h4>a2. Confidence Intervals: ordinal regression</h4>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>polr_lm_with_interaction <span class="ot">&lt;-</span> <span class="fu">polr</span>(s19 <span class="sc">~</span>  q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22 <span class="sc">+</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                              ptsd_symptom_total <span class="sc">+</span> grado <span class="sc">+</span> genero <span class="sc">+</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                              genero<span class="sc">*</span>ptsd_symptom_total <span class="sc">+</span> genero<span class="sc">*</span>q20 <span class="sc">+</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                              genero<span class="sc">*</span>q21 <span class="sc">+</span> genero<span class="sc">*</span>q22, </span>
+<h4>a2. Confidence intervals: ordinal regression</h4>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>polr_lm_with_interaction <span class="ot">&lt;-</span> <span class="fu">polr</span>(substanceUse <span class="sc">~</span>  q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22 <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                              ptsd_symptom_total <span class="sc">+</span> grade <span class="sc">+</span> gender <span class="sc">+</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                              gender<span class="sc">*</span>ptsd_symptom_total <span class="sc">+</span> gender<span class="sc">*</span>q20 <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                              gender<span class="sc">*</span>q21 <span class="sc">+</span> gender<span class="sc">*</span>q22, </span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> ordinalRegres_substanceUse, </span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">Hess =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
@@ -4671,12 +4675,12 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 ## q21                               0.27302653  0.09596677  0.455121847
 ## q22                              -0.24184855 -0.36436134 -0.119461430
 ## ptsd_symptom_total                0.08617894  0.07858543  0.093753788
-## grado                             0.38777579  0.36032241  0.415503667
-## generoFemale                     -0.19531548 -0.54653739  0.154327819
-## ptsd_symptom_total:generoFemale  -0.01456536 -0.02503827 -0.004094266
-## q20:generoFemale                 -0.02345194 -0.32095493  0.274187595
-## q21:generoFemale                 -0.03408861 -0.30924360  0.243349367
-## q22:generoFemale                 -0.04949006 -0.22642602  0.127620373</code></pre>
+## grade                             0.38777579  0.36032241  0.415503667
+## genderFemale                     -0.19531548 -0.54653739  0.154327819
+## ptsd_symptom_total:genderFemale  -0.01456536 -0.02503827 -0.004094266
+## q20:genderFemale                 -0.02345194 -0.32095493  0.274187595
+## q21:genderFemale                 -0.03408861 -0.30924360  0.243349367
+## q22:genderFemale                 -0.04949006 -0.22642602  0.127620373</code></pre>
 </div>
 </div>
 <div id="b-evaluating-model-fit" class="section level3">
@@ -4686,9 +4690,9 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(null_clm, clm_with_interaction)</span></code></pre></div>
 <pre><code>## Likelihood ratio tests of cumulative link models:
 ##  
-##                      formula:                                                                                                                              
-## null_clm             s19 ~ 1                                                                                                                               
-## clm_with_interaction s19 ~ q20 + q21 + q22 + ptsd_symptom_total + grado + genero + genero * ptsd_symptom_total + genero * q20 + genero * q21 + genero * q22
+##                      formula:                                                                                                                                       
+## null_clm             substanceUse ~ 1                                                                                                                               
+## clm_with_interaction substanceUse ~ q20 + q21 + q22 + ptsd_symptom_total + grade + gender + gender * ptsd_symptom_total + gender * q20 + gender * q21 + gender * q22
 ##                      link: threshold:
 ## null_clm             logit flexible  
 ## clm_with_interaction logit flexible  
@@ -4704,9 +4708,9 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nagelkerke</span>(<span class="at">fit =</span> clm_with_interaction,</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">null =</span> null_clm)</span></code></pre></div>
 <pre><code>## $Models
-##                                                                                                                                                                                        
-## Model: &quot;clm, s19 ~ q20 + q21 + q22 + ptsd_symptom_total + grado + genero + genero * ptsd_symptom_total + genero * q20 + genero * q21 + genero * q22, ordinalRegres_substanceUse, logit&quot;
-## Null:  &quot;clm, s19 ~ 1, ordinalRegres_substanceUse, logit&quot;                                                                                                                               
+##                                                                                                                                                                                                 
+## Model: &quot;clm, substanceUse ~ q20 + q21 + q22 + ptsd_symptom_total + grade + gender + gender * ptsd_symptom_total + gender * q20 + gender * q21 + gender * q22, ordinalRegres_substanceUse, logit&quot;
+## Null:  &quot;clm, substanceUse ~ 1, ordinalRegres_substanceUse, logit&quot;                                                                                                                               
 ## 
 ## $Pseudo.R.squared.for.model.vs.null
 ##                              Pseudo.R.squared
@@ -4740,12 +4744,12 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 ## q21                  5.01    1   0.03
 ## q22                  0   1   0.98
 ## ptsd_symptom_total           0.37    1   0.55
-## grado                    0.4 1   0.52
-## generoFemale             2.17    1   0.14
-## ptsd_symptom_total:generoFemale  2.24    1   0.13
-## q20:generoFemale         1.63    1   0.2
-## q21:generoFemale         0.39    1   0.53
-## q22:generoFemale         0.02    1   0.89
+## grade                    0.4 1   0.52
+## genderFemale             2.17    1   0.14
+## ptsd_symptom_total:genderFemale  2.24    1   0.13
+## q20:genderFemale         1.63    1   0.2
+## q21:genderFemale         0.39    1   0.53
+## q22:genderFemale         0.02    1   0.89
 ## -------------------------------------------------------------------- 
 ## 
 ## H0: Parallel Regression Assumption holds</code></pre>
@@ -4770,12 +4774,12 @@ counselor at school</strong>, <strong>ptsd_symptom_total</strong>,
 ##  4 q21                            0.273    0.0916      2.98  2.87e-  3 location 
 ##  5 q22                           -0.242    0.0625     -3.87  1.08e-  4 location 
 ##  6 ptsd_symptom_total             0.0862   0.00387    22.3   6.25e-110 location 
-##  7 grado                          0.388    0.0141     27.5   4.52e-167 location 
-##  8 generoFemale                  -0.195    0.179      -1.09  2.74e-  1 location 
-##  9 ptsd_symptom_total:generoFe…  -0.0146   0.00534    -2.73  6.40e-  3 location 
-## 10 q20:generoFemale              -0.0235   0.152      -0.155 8.77e-  1 location 
-## 11 q21:generoFemale              -0.0341   0.141      -0.242 8.09e-  1 location 
-## 12 q22:generoFemale              -0.0495   0.0903     -0.548 5.84e-  1 location</code></pre>
+##  7 grade                          0.388    0.0141     27.5   4.52e-167 location 
+##  8 genderFemale                  -0.195    0.179      -1.09  2.74e-  1 location 
+##  9 ptsd_symptom_total:genderFe…  -0.0146   0.00534    -2.73  6.40e-  3 location 
+## 10 q20:genderFemale              -0.0235   0.152      -0.155 8.77e-  1 location 
+## 11 q21:genderFemale              -0.0341   0.141      -0.242 8.09e-  1 location 
+## 12 q22:genderFemale              -0.0495   0.0903     -0.548 5.84e-  1 location</code></pre>
 </div>
 <div id="c2.-interpretation-of-regression-coefficients" class="section level4">
 <h4>c2. Interpretation of regression coefficients</h4>
@@ -4805,7 +4809,7 @@ endorsement decreased significantly by -0.242.</p></li>
 <li><p><strong>ptsd_symptom_total</strong> For every one unit increase
 in <strong>ptsd symptoms</strong> the log odds of high substance use
 increased significantly by 0.086.</p></li>
-<li><p><strong>grado:</strong> For each increase in <strong>grade
+<li><p><strong>grade:</strong> For each increase in <strong>grade
 level</strong> the log odds of high substance use increased
 significantly by 0.388. did not appear significant</p></li>
 <li><p><strong>gender:</strong> This coefficient is also for a
@@ -4846,15 +4850,15 @@ models using <code>broom::glance()</code>:</h4>
 Probabilities vs. Odds
 </p>
 </div>
-<p>(CITATION HERE FOR TABLE)</p>
+<p><a href="https://keydifferences.com/difference-between-odds-and-probability.html">Citation</a></p>
 </div>
 <div id="c5.-looking-at-results-as-odds-ratios-with-confidence-intervals-instead-of-log-likelihood" class="section level4">
 <h4>c5. Looking at results as odds ratios with confidence intervals
 instead of log likelihood</h4>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>forOdds_clm_with_interaction <span class="ot">&lt;-</span> <span class="fu">polr</span>(s19 <span class="sc">~</span>  q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22 <span class="sc">+</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                              ptsd_symptom_total <span class="sc">+</span> grado <span class="sc">+</span> genero <span class="sc">+</span> </span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                              genero<span class="sc">*</span>ptsd_symptom_total <span class="sc">+</span> genero<span class="sc">*</span>q20 <span class="sc">+</span> </span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                              genero<span class="sc">*</span>q21 <span class="sc">+</span> genero<span class="sc">*</span>q22, </span>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>forOdds_clm_with_interaction <span class="ot">&lt;-</span> <span class="fu">polr</span>(substanceUse <span class="sc">~</span>  q20 <span class="sc">+</span> q21 <span class="sc">+</span> q22 <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                              ptsd_symptom_total <span class="sc">+</span> grade <span class="sc">+</span> gender <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                              gender<span class="sc">*</span>ptsd_symptom_total <span class="sc">+</span> gender<span class="sc">*</span>q20 <span class="sc">+</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                              gender<span class="sc">*</span>q21 <span class="sc">+</span> gender<span class="sc">*</span>q22, </span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data =</span> ordinalRegres_substanceUse, </span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">Hess =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
@@ -4867,34 +4871,28 @@ instead of log likelihood</h4>
 ## q21                             1.3139351 1.1007225 1.5763654
 ## q22                             0.7851751 0.6946401 0.8873982
 ## ptsd_symptom_total              1.0900014 1.0817558 1.0982893
-## grado                           1.4736993 1.4337916 1.5151337
-## generoFemale                    0.8225751 0.5789510 1.1668733
-## ptsd_symptom_total:generoFemale 0.9855402 0.9752726 0.9959141
-## q20:generoFemale                0.9768209 0.7254559 1.3154616
-## q21:generoFemale                0.9664859 0.7340019 1.2755142
-## q22:generoFemale                0.9517146 0.7973783 1.1361216</code></pre>
+## grade                           1.4736993 1.4337916 1.5151337
+## genderFemale                    0.8225751 0.5789510 1.1668733
+## ptsd_symptom_total:genderFemale 0.9855402 0.9752726 0.9959141
+## q20:genderFemale                0.9768209 0.7254559 1.3154616
+## q21:genderFemale                0.9664859 0.7340019 1.2755142
+## q22:genderFemale                0.9517146 0.7973783 1.1361216</code></pre>
 </div>
 <div id="c7.-interpretation-of-odds-ratios" class="section level4">
-<h4>c7. Interpretation of Odds Ratios</h4>
+<h4>c7. Interpretation of odds ratios</h4>
 <ul>
-<li><p><strong>social support endorsements</strong>,</p>
-<ul>
-<li>For students that endorsed having <strong>social support from an
+<li><p>For students that endorsed having <strong>social support from an
 adult at home</strong>, the odds of endorsing high substance use
-decrease by a factor of approximately 0.42.</li>
-<li>For students that endorsed having <strong>social support from at
+decrease by a factor of approximately 0.42.</p></li>
+<li><p>For students that endorsed having <strong>social support from at
 least one peer</strong>, the odds of endorsing high substance use
-increased by a factor of approximately 1.31,</li>
-<li>For students that endorsed having <strong>social support from a
+increased by a factor of approximately 1.31,</p></li>
+<li><p>For students that endorsed having <strong>social support from a
 counselor or teacher at school</strong>, the odds of endorsing high
-substance use decreased by a factor of approximately 0.79.</li>
-</ul></li>
-<li><p><strong>PTSD Symptoms</strong></p>
-<ul>
-<li>For each one unit increase in <strong>PTSD Symptom Total</strong>,
-the odds of a student endorsing high substance use increased by a factor
-of approximately 1.09.</li>
-</ul></li>
+substance use decreased by a factor of approximately 0.79.</p></li>
+<li><p>For each one unit increase in <strong>PTSD Symptom
+Total</strong>, the odds of a student endorsing high substance use
+increased by a factor of approximately 1.09.</p></li>
 <li><p>For each increase in <strong>Grade level</strong>, the odds of
 endorsing high substance use increased by a factor of approximately
 1.47,</p></li>
@@ -4902,10 +4900,9 @@ endorsing high substance use increased by a factor of approximately
 <strong>female and experiencing ptsd symptoms</strong>, the odds of
 endorsing high substance use decreased by a factor of approximately 0.99
 when compared to males experiencing ptsd symptoms.</p></li>
+<li><p>Please note: The odds ratios for the intercepts are generally not
+interpreted.</p></li>
 </ul>
-<p>For more information on interpreting odds ratios see: <a href="https://rpubs.com/raoulbia/interpreting_glm_logistic_regression_output">How
-do I interpret odds ratios in logistic regression?</a>. The odds ratios
-for the intercepts are not generally interpreted.</p>
 </div>
 </div>
 </div>
